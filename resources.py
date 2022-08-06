@@ -7,6 +7,6 @@ class Resources:
         self.SCREEN_WIDTH = 500
         self.SCREEN_HEIGHT = 720
 
-        self.PLAYER_SPRITE_PATH = "Resources/block.jpg"
+        self.PLAYER_SPRITE_PATH = "Resources/player.png"
         self.PLAYER_WIDTH = 40
         self.PLAYER_HEIGHT = 40

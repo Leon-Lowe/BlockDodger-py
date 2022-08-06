@@ -2,6 +2,7 @@
 #from pygame.locals import *
 from resources import *
 from player import *
+from mathmatics import *
 
 class Game:
     def __init__(self):
@@ -11,14 +12,18 @@ class Game:
         self.load_resources()
         self.running = False
         self.clock = pygame.time.Clock()
-        self.player = Player(self.resources.SCREEN_WIDTH - self.resources.PLAYER_WIDTH, self.resources.SCREEN_HEIGHT - self.resources.PLAYER_HEIGHT)
+        player_max_x = self.resources.SCREEN_WIDTH - self.resources.PLAYER_WIDTH
+        player_max_y = self.resources.SCREEN_HEIGHT - self.resources.PLAYER_HEIGHT
+        player_max_vector = Vector2(player_max_x, player_max_y)
+        player_starting_position = Vector2(self.resources.SCREEN_WIDTH/2, self.resources.SCREEN_HEIGHT/2)
+        self.player = Player(player_starting_position, player_max_vector)
 
     def load_resources(self):
-        self.player_sprite = pygame.image.load(self.resources.PLAYER_SPRITE_PATH).convert()
+        self.player_sprite = pygame.image.load(self.resources.PLAYER_SPRITE_PATH).convert_alpha()
 
     def draw_call(self):
         self.surface.fill((self.resources.BACKGROUND_COLOUR))
-        self.surface.blit(self.player_sprite, (self.player.x, self.player.y))
+        self.surface.blit(self.player_sprite, (self.player.position.x, self.player.position.y))
         pygame.display.update()
 
     def input(self):
@@ -28,6 +33,7 @@ class Game:
 
         self.keys = pygame.key.get_pressed()
 
+    def logic(self):
         x_move = (self.keys[pygame.K_d] - self.keys[pygame.K_a])
         y_move = (self.keys[pygame.K_s] - self.keys[pygame.K_w])
 
@@ -40,3 +46,4 @@ class Game:
             self.clock.tick(60)
             self.draw_call()
             self.input()
+            self.logic()
