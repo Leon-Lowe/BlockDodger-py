@@ -1,5 +1,5 @@
 from mathamatics import *
-from transform import *
+from components.transform import *
 
 class Player:
     def __init__(self, starting_position=Vector2(), max_vector=Vector2(), pixel_size=0, speed=5):

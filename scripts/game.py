@@ -1,8 +1,8 @@
 #import pygame
 #from pygame.locals import *
 from resources import *
-from player import *
-from enemy import *
+from entities.player import Player
+from entities.enemy import Enemy
 from mathamatics import *
 
 class Game:

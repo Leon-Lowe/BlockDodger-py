@@ -1,5 +1,5 @@
 from mathamatics import *
-from transform import *
+from components.transform import *
 
 class Enemy:
     def __init__(self, starting_position=Vector2(), max_y=100, height=40, pixel_size=0, speed=5):
