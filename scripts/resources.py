@@ -22,4 +22,8 @@ class Resources:
         self.ENEMY_WIDTH = 40
         self.ENEMY_HEIGHT = 40
         self.ENEMY_SPEED = 3
-        self.ENEMY_GAP = 5
+        self.ENEMY_MAX_SPEED = 6
+        self.ENEMY_GAP = 20
+
+        #Enemy Manager Settings
+        self.MAX_ENEMIES = 8

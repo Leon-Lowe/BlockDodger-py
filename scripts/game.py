@@ -2,23 +2,26 @@
 #from pygame.locals import *
 from resources import *
 from entities.player import Player
-from entities.enemy import Enemy
+from entities.enemy_cluster import EnemyManager
 from mathamatics import *
+from entities.enemy import Enemy
 
 class Game:
     def __init__(self):
         self.game_setup()
         self.player_setup()
-        self.temp_enemy_setup()
+        self.enemy_setup()
         
 
     def game_setup(self):
         pygame.init()
         self.resources = Resources()
         self.surface = pygame.display.set_mode((self.resources.SCREEN_WIDTH, self.resources.SCREEN_HEIGHT))
+        pygame.display.set_caption("Astroid Dodger")
         self.load_resources()
         self.running = False
         self.clock = pygame.time.Clock()
+        self.score = 0
 
     def player_setup(self):
         max_x = self.resources.SCREEN_WIDTH - self.resources.PLAYER_WIDTH
@@ -27,9 +30,10 @@ class Game:
         starting_position = Vector2(self.resources.SCREEN_WIDTH/2 - self.resources.PLAYER_WIDTH, self.resources.SCREEN_HEIGHT/2 - self.resources.PLAYER_HEIGHT)
         self.player = Player(starting_position, max_vector, self.resources.PIXEL_SIZE, self.resources.PLAYER_SPEED)
 
-    def temp_enemy_setup(self):
+    def enemy_setup(self):
+        self.enemy_speed_multiplier = float(1)
         starting_position = Vector2(0 + self.resources.ENEMY_GAP, 0 - self.resources.ENEMY_HEIGHT)
-        self.enemy = Enemy(starting_position, self.resources.SCREEN_HEIGHT, self.resources.ENEMY_HEIGHT, self.resources.PIXEL_SIZE, self.resources.ENEMY_SPEED)
+        self.enemy_manager = EnemyManager(Enemy(), self.resources.MAX_ENEMIES, starting_position, self.resources.ENEMY_GAP, self.resources.SCREEN_HEIGHT, self.resources.PIXEL_SIZE, self.resources.ENEMY_SPEED)
 
     def load_resources(self):
         self.player_sprite = pygame.image.load(self.resources.PLAYER_SPRITE_PATH).convert_alpha()
@@ -38,7 +42,10 @@ class Game:
     def draw_call(self):
         self.surface.fill((self.resources.BACKGROUND_COLOUR))
         self.surface.blit(self.player_sprite, (self.player.transform.position.x, self.player.transform.position.y))
-        self.surface.blit(self.enemy_sprite, (self.enemy.transform.position.x, self.enemy.transform.position.y))
+
+        for i in range(len(self.enemy_manager.enemies)):
+            self.surface.blit(self.enemy_sprite, (self.enemy_manager.enemies[i].transform.position.x, self.enemy_manager.enemies[i].transform.position.y))
+
         pygame.display.update()
 
     def input(self):
@@ -54,7 +61,22 @@ class Game:
         move_vector = Vector2(x_move, y_move)
 
         self.player.move(move_vector=move_vector)
-        self.enemy.move(move_vector=Vector2(0,1))
+
+        for i in range(len(self.enemy_manager.enemies)):
+            self.enemy_manager.enemies[i].move(move_vector=Vector2(0,1))
+
+        if self.enemy_manager.reached_bottom():
+            self.score += 1
+            print(self.score)
+
+            if self.resources.ENEMY_SPEED * self.enemy_speed_multiplier < self.resources.ENEMY_MAX_SPEED:
+                self.enemy_speed_multiplier += float(0.05)
+
+            if self.resources.ENEMY_SPEED * self.enemy_speed_multiplier > self.resources.ENEMY_MAX_SPEED:
+                self.enemy_speed_multiplier = self.resources.ENEMY_MAX_SPEED / self.resources.ENEMY_SPEED
+
+            self.enemy_manager.spawn_enemies(self.enemy_speed_multiplier)
+        #self.enemy.move(move_vector=Vector2(0,1))
 
     def run(self):
         self.running = True
