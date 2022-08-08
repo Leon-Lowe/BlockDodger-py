@@ -3,8 +3,11 @@ from pygame.locals import *
 
 class Resources:
     def __init__(self):
-        #Screen Settings
+        #Colour Settings
         self.BACKGROUND_COLOUR = (100, 100, 100)
+        self.SCORE_FONT_COLOUR = (143, 143, 143)
+
+        #Screen Settings
         self.SCREEN_WIDTH = 500
         self.SCREEN_HEIGHT = 720
 

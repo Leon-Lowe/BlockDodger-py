@@ -11,6 +11,7 @@ class Game:
         self.game_setup()
         self.player_setup()
         self.enemy_setup()
+        self.score_setup()
         
 
     def game_setup(self):
@@ -21,7 +22,6 @@ class Game:
         self.load_resources()
         self.running = False
         self.clock = pygame.time.Clock()
-        self.score = 0
 
     def player_setup(self):
         max_x = self.resources.SCREEN_WIDTH - self.resources.PLAYER_WIDTH
@@ -35,12 +35,22 @@ class Game:
         starting_position = Vector2(0 + self.resources.ENEMY_GAP, 0 - self.resources.ENEMY_HEIGHT)
         self.enemy_manager = EnemyManager(Enemy(), self.resources.MAX_ENEMIES, starting_position, self.resources.ENEMY_GAP, self.resources.SCREEN_HEIGHT, self.resources.PIXEL_SIZE, self.resources.ENEMY_SPEED)
 
+    def score_setup(self):
+        self.score = 0
+        self.font = pygame.font.SysFont("arial", 300, True)
+        
+
     def load_resources(self):
         self.player_sprite = pygame.image.load(self.resources.PLAYER_SPRITE_PATH).convert_alpha()
         self.enemy_sprite = pygame.image.load(self.resources.ENEMY_SPRITE_PATH).convert_alpha()
 
     def draw_call(self):
         self.surface.fill((self.resources.BACKGROUND_COLOUR))
+
+        self.score_text = self.font.render(f"{self.score}", True, self.resources.SCORE_FONT_COLOUR)
+        self.score_text_rect = self.score_text.get_rect(center=(self.resources.SCREEN_WIDTH/2, self.resources.SCREEN_HEIGHT/2))
+        self.surface.blit(self.score_text, self.score_text_rect)
+
         self.surface.blit(self.player_sprite, (self.player.transform.position.x, self.player.transform.position.y))
 
         for i in range(len(self.enemy_manager.enemies)):
