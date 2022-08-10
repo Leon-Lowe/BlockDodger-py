@@ -19,13 +19,13 @@ class Resources:
         self.MAIN_FONT_PATH = "Resources/Fonts/kenney_pixel_square.ttf"
 
         #Player Settings
-        self.PLAYER_SPRITE_PATH = "Resources/Images/player.png"
+        self.PLAYER_SPRITE_PATH = "Resources/Images/plane.png"
         self.PLAYER_WIDTH = 40
         self.PLAYER_HEIGHT = 40
         self.PLAYER_SPEED = 5
 
         #Enemy Settings
-        self.ENEMY_SPRITE_PATH = "Resources/Images/enemy.png"
+        self.ENEMY_SPRITE_PATH = "Resources/Images/asteroid.png"
         self.ENEMY_WIDTH = 40
         self.ENEMY_HEIGHT = 40
         self.ENEMY_SPEED = 3

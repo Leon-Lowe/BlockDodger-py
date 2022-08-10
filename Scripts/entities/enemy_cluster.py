@@ -23,7 +23,7 @@ class EnemyManager():
             current_position = Vector2(self.first_enemy_position.x + ((self.pixel_size * i) + (self.enemy_gap * i)), self.first_enemy_position.y)
             rand_chance = random.randint(0,4)
             if rand_chance != 0:
-                self.enemies.append(Enemy(current_position, self.enemy_max_y, self.pixel_size, (self.enemy_speed * speed_multiplier)))
+                self.enemies.append(Enemy(current_position, self.enemy_max_y, self.pixel_size, (self.enemy_speed * speed_multiplier), random.randint(0,360)))
             else:
                 deleted += 1
 

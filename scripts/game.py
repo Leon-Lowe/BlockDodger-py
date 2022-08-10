@@ -1,5 +1,6 @@
 #import pygame
 #from pygame.locals import *
+from random import randint
 from resources import *
 from entities.player import Player
 from entities.enemy_cluster import EnemyManager
@@ -35,7 +36,7 @@ class Game:
         max_x = self.resources.SCREEN_WIDTH - self.resources.PLAYER_WIDTH
         max_y = self.resources.SCREEN_HEIGHT - self.resources.PLAYER_HEIGHT
         max_vector = Vector2(max_x, max_y)
-        starting_position = Vector2((self.resources.SCREEN_WIDTH/2) - (self.resources.PLAYER_WIDTH/2), (self.resources.SCREEN_HEIGHT/2) - (self.resources.PLAYER_HEIGHT/2))
+        starting_position = Vector2((self.resources.SCREEN_WIDTH/2) - (self.resources.PLAYER_WIDTH/2), self.resources.SCREEN_HEIGHT - 120)
         self.player = Player(starting_position, max_vector, self.resources.PIXEL_SIZE, self.resources.PLAYER_SPEED)
 
     def enemy_setup(self):
@@ -78,7 +79,9 @@ class Game:
         self.surface.blit(self.player_sprite, (self.player.transform.position.x, self.player.transform.position.y))
 
         for i in range(len(self.enemy_manager.enemies)):
-            self.surface.blit(self.enemy_sprite, (self.enemy_manager.enemies[i].transform.position.x, self.enemy_manager.enemies[i].transform.position.y))
+            new_enemy_sprite = self.enemy_sprite
+            new_enemy_sprite = pygame.transform.rotate(new_enemy_sprite, self.enemy_manager.enemies[i].rotation)
+            self.surface.blit(new_enemy_sprite, (self.enemy_manager.enemies[i].transform.position.x, self.enemy_manager.enemies[i].transform.position.y))
 
     def draw_main_menu(self):
         self.surface.fill((self.resources.BACKGROUND_COLOUR))
@@ -130,8 +133,8 @@ class Game:
 
     def game_logic(self):
         x_move = (self.keys[pygame.K_d] - self.keys[pygame.K_a])
-        y_move = (self.keys[pygame.K_s] - self.keys[pygame.K_w])
-        move_vector = Vector2(x_move, y_move)
+        #y_move = (self.keys[pygame.K_s] - self.keys[pygame.K_w])
+        move_vector = Vector2(x_move, 0)
 
         self.player.move(move_vector=move_vector)
 
