@@ -13,6 +13,7 @@ class Game:
         self.player_setup()
         self.enemy_setup()
         self.score_setup()
+        self.play_background_music()
 
     def reset_game(self):
         self.game_over = False
@@ -23,6 +24,8 @@ class Game:
 
     def game_setup(self):
         pygame.init()
+        pygame.mixer.init()
+
         self.resources = Resources()
         self.surface = pygame.display.set_mode((self.resources.SCREEN_WIDTH, self.resources.SCREEN_HEIGHT))
         pygame.display.set_caption("Astroid Dodger")
@@ -113,6 +116,15 @@ class Game:
         sub_text_two_rect = sub_text_two.get_rect(center=(self.resources.SCREEN_WIDTH/2, self.resources.SCREEN_HEIGHT - 60))
         self.surface.blit(sub_text_two, sub_text_two_rect)
 
+    def play_background_music(self):
+        pygame.mixer.music.load("Resources/Sfx/music.mp3")
+        pygame.mixer.music.set_volume(30)
+        pygame.mixer.music.play(-1)
+    
+    def play_sound(self, sound):
+        sound = pygame.mixer.Sound(f"Resources/Sfx/{sound}.wav")
+        pygame.mixer.Sound.play(sound)
+
     def input(self):
         for event in pygame.event.get():
                 if event.type == QUIT:
@@ -120,9 +132,11 @@ class Game:
                 if event.type == KEYDOWN:
                     if self.game_over:
                         if event.key == K_RETURN:
+                            self.play_sound("ui_select")
                             self.reset_game()
                     if self.in_main_menu:
                         if event.key == K_RETURN:
+                            self.play_sound("ui_select")
                             self.in_main_menu = False
 
         self.keys = pygame.key.get_pressed()
@@ -141,11 +155,14 @@ class Game:
         for i in range(len(self.enemy_manager.enemies)):
             self.enemy_manager.enemies[i].move(move_vector=Vector2(0,1))
             if self.enemy_manager.enemies[i].collider.is_colliding(self.player.transform.position):
+                self.play_sound("explosion")
                 self.game_over = True
 
         if self.enemy_manager.reached_bottom():
             self.score += 1
             print(self.score)
+
+            self.play_sound("score")
 
             if self.resources.ENEMY_SPEED * self.enemy_speed_multiplier < self.resources.ENEMY_MAX_SPEED:
                 self.enemy_speed_multiplier += float(0.05)
