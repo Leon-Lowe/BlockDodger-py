@@ -22,6 +22,7 @@ class Game:
         self.load_resources()
         self.running = False
         self.clock = pygame.time.Clock()
+        self.game_over = False
 
     def player_setup(self):
         max_x = self.resources.SCREEN_WIDTH - self.resources.PLAYER_WIDTH
@@ -45,6 +46,15 @@ class Game:
         self.enemy_sprite = pygame.image.load(self.resources.ENEMY_SPRITE_PATH).convert_alpha()
 
     def draw_call(self):
+        if self.game_over == False:
+            self.draw_game()
+        
+        if self.game_over == True:
+            self.draw_game_over()
+
+        pygame.display.update()
+
+    def draw_game(self):
         self.surface.fill((self.resources.BACKGROUND_COLOUR))
 
         self.score_text = self.font.render(f"{self.score}", True, self.resources.SCORE_FONT_COLOUR)
@@ -56,7 +66,8 @@ class Game:
         for i in range(len(self.enemy_manager.enemies)):
             self.surface.blit(self.enemy_sprite, (self.enemy_manager.enemies[i].transform.position.x, self.enemy_manager.enemies[i].transform.position.y))
 
-        pygame.display.update()
+    def draw_game_over(self):
+        self.surface.fill((self.resources.BACKGROUND_COLOUR))
 
     def input(self):
         for event in pygame.event.get():
@@ -74,6 +85,8 @@ class Game:
 
         for i in range(len(self.enemy_manager.enemies)):
             self.enemy_manager.enemies[i].move(move_vector=Vector2(0,1))
+            if self.enemy_manager.enemies[i].collider.is_colliding(self.player.transform.position):
+                self.game_over = True
 
         if self.enemy_manager.reached_bottom():
             self.score += 1
