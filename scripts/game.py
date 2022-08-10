@@ -44,7 +44,7 @@ class Game:
 
     def score_setup(self):
         self.score = 0
-        self.font = pygame.font.SysFont("arial", 300, True)
+        self.score_font = pygame.font.Font(self.resources.MAIN_FONT_PATH, 300)
         
 
     def load_resources(self):
@@ -63,8 +63,8 @@ class Game:
     def draw_game(self):
         self.surface.fill((self.resources.BACKGROUND_COLOUR))
 
-        self.score_text = self.font.render(f"{self.score}", True, self.resources.SCORE_FONT_COLOUR)
-        self.score_text_rect = self.score_text.get_rect(center=(self.resources.SCREEN_WIDTH/2, self.resources.SCREEN_HEIGHT/2))
+        self.score_text = self.score_font.render(f"{self.score}", True, self.resources.SCORE_FONT_COLOUR)
+        self.score_text_rect = self.score_text.get_rect(center=((self.resources.SCREEN_WIDTH/2) + (self.resources.PIXEL_SIZE/2), self.resources.SCREEN_HEIGHT/2))
         self.surface.blit(self.score_text, self.score_text_rect)
 
         self.surface.blit(self.player_sprite, (self.player.transform.position.x, self.player.transform.position.y))
