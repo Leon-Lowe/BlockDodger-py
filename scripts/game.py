@@ -29,6 +29,7 @@ class Game:
         self.running = False
         self.clock = pygame.time.Clock()
         self.game_over = False
+        self.in_main_menu = True
 
     def player_setup(self):
         max_x = self.resources.SCREEN_WIDTH - self.resources.PLAYER_WIDTH
@@ -56,11 +57,14 @@ class Game:
         self.enemy_sprite = pygame.image.load(self.resources.ENEMY_SPRITE_PATH).convert_alpha()
 
     def draw_call(self):
-        if self.game_over == False:
+        if self.game_over == False and self.in_main_menu == False:
             self.draw_game()
         
-        if self.game_over == True:
+        if self.game_over == True and self.in_main_menu == False:
             self.draw_game_over()
+        
+        if self.in_main_menu == True:
+            self.draw_main_menu()
 
         pygame.display.update()
 
@@ -76,6 +80,21 @@ class Game:
         for i in range(len(self.enemy_manager.enemies)):
             self.surface.blit(self.enemy_sprite, (self.enemy_manager.enemies[i].transform.position.x, self.enemy_manager.enemies[i].transform.position.y))
 
+    def draw_main_menu(self):
+        self.surface.fill((self.resources.BACKGROUND_COLOUR))
+
+        title_text_one = self.title_font.render(f"Asteroid", True, self.resources.MAIN_FONT_COLOUR)
+        title_text_rect = title_text_one.get_rect(center=(self.resources.SCREEN_WIDTH/2, 60))
+        self.surface.blit(title_text_one, title_text_rect)
+
+        title_text_two = self.title_font.render(f"Dodger", True, self.resources.MAIN_FONT_COLOUR)
+        title_text_rect = title_text_two.get_rect(center=(self.resources.SCREEN_WIDTH/2, 120))
+        self.surface.blit(title_text_two, title_text_rect)
+
+        sub_text_one = self.secondary_font.render(f"Press 'enter' to play", True, self.resources.SECONDARY_FONT_COLOUR)
+        sub_text_one_rect = sub_text_one.get_rect(center=(self.resources.SCREEN_WIDTH/2, (self.resources.SCREEN_HEIGHT/2)))
+        self.surface.blit(sub_text_one, sub_text_one_rect)
+    
     def draw_game_over(self):
         self.surface.fill((self.resources.BACKGROUND_COLOUR))
 
@@ -99,11 +118,14 @@ class Game:
                     if self.game_over:
                         if event.key == K_RETURN:
                             self.reset_game()
+                    if self.in_main_menu:
+                        if event.key == K_RETURN:
+                            self.in_main_menu = False
 
         self.keys = pygame.key.get_pressed()
 
     def logic(self):
-        if self.game_over == False:
+        if self.game_over == False and self.in_main_menu == False:
             self.game_logic()
 
     def game_logic(self):
