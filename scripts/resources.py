@@ -5,7 +5,8 @@ class Resources:
     def __init__(self):
         #Colour Settings
         self.BACKGROUND_COLOUR = (100, 100, 100)
-        self.SCORE_FONT_COLOUR = (143, 143, 143)
+        self.MAIN_FONT_COLOUR = (61, 61, 61)
+        self.SECONDARY_FONT_COLOUR = (143, 143, 143)
 
         #Screen Settings
         self.SCREEN_WIDTH = 500

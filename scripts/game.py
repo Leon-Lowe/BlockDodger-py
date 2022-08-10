@@ -44,8 +44,12 @@ class Game:
 
     def score_setup(self):
         self.score = 0
+        self.load_fonts()
+
+    def load_fonts(self):
         self.score_font = pygame.font.Font(self.resources.MAIN_FONT_PATH, 300)
-        
+        self.title_font = pygame.font.Font(self.resources.MAIN_FONT_PATH, 60)
+        self.secondary_font = pygame.font.Font(self.resources.MAIN_FONT_PATH, 30)
 
     def load_resources(self):
         self.player_sprite = pygame.image.load(self.resources.PLAYER_SPRITE_PATH).convert_alpha()
@@ -63,7 +67,7 @@ class Game:
     def draw_game(self):
         self.surface.fill((self.resources.BACKGROUND_COLOUR))
 
-        self.score_text = self.score_font.render(f"{self.score}", True, self.resources.SCORE_FONT_COLOUR)
+        self.score_text = self.score_font.render(f"{self.score}", True, self.resources.SECONDARY_FONT_COLOUR)
         self.score_text_rect = self.score_text.get_rect(center=((self.resources.SCREEN_WIDTH/2) + (self.resources.PIXEL_SIZE/2), self.resources.SCREEN_HEIGHT/2))
         self.surface.blit(self.score_text, self.score_text_rect)
 
@@ -74,6 +78,18 @@ class Game:
 
     def draw_game_over(self):
         self.surface.fill((self.resources.BACKGROUND_COLOUR))
+
+        title_text = self.title_font.render(f"You Died!", True, self.resources.MAIN_FONT_COLOUR)
+        title_text_rect = title_text.get_rect(center=(self.resources.SCREEN_WIDTH/2, (self.resources.SCREEN_HEIGHT/2) - 60))
+        self.surface.blit(title_text, title_text_rect)
+
+        sub_text_one = self.secondary_font.render(f"You dodged {self.score} asteroids", True, self.resources.SECONDARY_FONT_COLOUR)
+        sub_text_one_rect = sub_text_one.get_rect(center=(self.resources.SCREEN_WIDTH/2, (self.resources.SCREEN_HEIGHT/2)))
+        self.surface.blit(sub_text_one, sub_text_one_rect)
+
+        sub_text_two = self.secondary_font.render(f"Press 'Enter' to restart", True, self.resources.SECONDARY_FONT_COLOUR)
+        sub_text_two_rect = sub_text_two.get_rect(center=(self.resources.SCREEN_WIDTH/2, self.resources.SCREEN_HEIGHT - 60))
+        self.surface.blit(sub_text_two, sub_text_two_rect)
 
     def input(self):
         for event in pygame.event.get():
