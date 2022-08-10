@@ -12,6 +12,12 @@ class Game:
         self.player_setup()
         self.enemy_setup()
         self.score_setup()
+
+    def reset_game(self):
+        self.game_over = False
+        self.player_setup()
+        self.enemy_setup()
+        self.score_setup()
         
 
     def game_setup(self):
@@ -28,7 +34,7 @@ class Game:
         max_x = self.resources.SCREEN_WIDTH - self.resources.PLAYER_WIDTH
         max_y = self.resources.SCREEN_HEIGHT - self.resources.PLAYER_HEIGHT
         max_vector = Vector2(max_x, max_y)
-        starting_position = Vector2(self.resources.SCREEN_WIDTH/2 - self.resources.PLAYER_WIDTH, self.resources.SCREEN_HEIGHT/2 - self.resources.PLAYER_HEIGHT)
+        starting_position = Vector2((self.resources.SCREEN_WIDTH/2) - (self.resources.PLAYER_WIDTH/2), (self.resources.SCREEN_HEIGHT/2) - (self.resources.PLAYER_HEIGHT/2))
         self.player = Player(starting_position, max_vector, self.resources.PIXEL_SIZE, self.resources.PLAYER_SPEED)
 
     def enemy_setup(self):
@@ -73,10 +79,18 @@ class Game:
         for event in pygame.event.get():
                 if event.type == QUIT:
                     self.running = False
+                if event.type == KEYDOWN:
+                    if self.game_over:
+                        if event.key == K_RETURN:
+                            self.reset_game()
 
         self.keys = pygame.key.get_pressed()
 
     def logic(self):
+        if self.game_over == False:
+            self.game_logic()
+
+    def game_logic(self):
         x_move = (self.keys[pygame.K_d] - self.keys[pygame.K_a])
         y_move = (self.keys[pygame.K_s] - self.keys[pygame.K_w])
         move_vector = Vector2(x_move, y_move)
@@ -99,7 +113,6 @@ class Game:
                 self.enemy_speed_multiplier = self.resources.ENEMY_MAX_SPEED / self.resources.ENEMY_SPEED
 
             self.enemy_manager.spawn_enemies(self.enemy_speed_multiplier)
-        #self.enemy.move(move_vector=Vector2(0,1))
 
     def run(self):
         self.running = True
